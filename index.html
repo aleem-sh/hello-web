@@ -1,0 +1,80 @@
+HTML
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Random Quotes</title>
+  <style>
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .box {
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 150px; /* Centers text vertically */
+      background-color: #ddd; /* Set initial background color */
+      color: transparent; /* Hide text initially */
+    }
+
+    .box.clicked {
+      background-color: getRandomColor(); /* Set random color on click */
+      color: black; /* Display text on click */
+    }
+
+    .quote {
+      font-size: 18px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box" id="box1"></div>
+    <div class="box" id="box2"></div>
+    <div class="box" id="box3"></div>
+    <div class="box" id="box4"></div>
+    <div class="box" id="box5"></div>
+  </div>
+
+  <script>
+    const quotes = [
+      "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart. - Helen Keller",
+      "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails. Explore, Dream, Discover. - Mark Twain",
+      "The difference between ordinary and extraordinary is that little extra. - Jimmy Johnson",
+      "It is during our darkest moments that we must focus to see the light. - Aristotle",
+      "If you can dream it, you can do it. - Walt Disney"
+    ];
+
+    const boxes = document.querySelectorAll(".box");
+
+    function getRandomColor() {
+      const letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    function displayQuote(box) {
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      box.textContent = randomQuote;
+      box.classList.add("clicked"); // Add "clicked" class for styling
+    }
+
+    boxes.forEach(box => {
+      box.addEventListener("click", () => displayQuote(box));
+    });
+  </script>
+</body>
+</html>
