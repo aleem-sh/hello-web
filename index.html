@@ -1,80 +1,119 @@
-HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Random Quotes</title>
+  <title>Countdown Timer</title>
   <style>
     .container {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      width: 80%;
-      margin: 0 auto;
+      flex-direction: column;
+      align-items: center;
       padding: 20px;
     }
 
-    .box {
-      width: 150px;
-      height: 150px;
-      margin: 10px;
+    .timer-circle {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 10px solid #ddd; /* Original border color */
+      position: relative;
+    }
+
+    .fill {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: absolute;
+      animation: fill 0s linear forwards;
+    }
+
+    @keyframes fill {
+      from {
+        background-color: yellow;
+      }
+      to {
+        background-color: red;
+      }
+    }
+
+    .timer-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      font-weight: bold;
+    }
+
+    #input-box {
+      margin-bottom: 10px;
+    }
+
+    #input-seconds {
+      padding: 5px;
+      border: 1px solid #ccc;
+    }
+
+    #start-button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
       cursor: pointer;
-      text-align: center;
-      line-height: 150px; /* Centers text vertically */
-      background-color: #ddd; /* Set initial background color */
-      color: transparent; /* Hide text initially */
-    }
-
-    .box.clicked {
-      background-color: getRandomColor(); /* Set random color on click */
-      color: black; /* Display text on click */
-    }
-
-    .quote {
-      font-size: 18px;
-      font-style: italic;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="box" id="box1"></div>
-    <div class="box" id="box2"></div>
-    <div class="box" id="box3"></div>
-    <div class="box" id="box4"></div>
-    <div class="box" id="box5"></div>
+    <div id="input-box">
+      <label for="input-seconds">Enter seconds:</label>
+      <input type="number" id="input-seconds" min="1">
+    </div>
+    <button id="start-button">Start Timer</button>
+    <div class="timer-circle">
+      <div class="fill"></div>
+      <span class="timer-text" id="timer-display">00:00</span>
+    </div>
   </div>
 
   <script>
-    const quotes = [
-      "The best and most beautiful things in the world cannot be seen or even touched - they must be felt with the heart. - Helen Keller",
-      "Twenty years from now you will be more disappointed by the things that you didn't do than by the ones you did do. So throw off the bowlines, sail away from safe harbor, catch the trade winds in your sails. Explore, Dream, Discover. - Mark Twain",
-      "The difference between ordinary and extraordinary is that little extra. - Jimmy Johnson",
-      "It is during our darkest moments that we must focus to see the light. - Aristotle",
-      "If you can dream it, you can do it. - Walt Disney"
-    ];
+    const timerCircle = document.querySelector(".timer-circle");
+    const fill = document.querySelector(".fill");
+    const timerText = document.getElementById("timer-display");
+    const startButton = document.getElementById("start-button");
+    const inputSeconds = document.getElementById("input-seconds");
 
-    const boxes = document.querySelectorAll(".box");
+    let remainingSeconds = 0;
+    let intervalId = null;
+    const originalBorderColor = timerCircle.style.borderColor; // Store initial border color
 
-    function getRandomColor() {
-      const letters = '0123456789ABCDEF';
-      let color = '#';
-      for (let i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
+    function updateTimerDisplay(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSecs = seconds % 60;
+      timerText.textContent = `${minutes.toString().padStart(2, "0")}:${remainingSecs.toString().padStart(2, "0")}`;
     }
 
-    function displayQuote(box) {
-      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-      box.textContent = randomQuote;
-      box.classList.add("clicked"); // Add "clicked" class for styling
+    function startTimer() {
+      remainingSeconds = parseInt(inputSeconds.value);
+      updateTimerDisplay(remainingSeconds);
+      fill.style.animationDuration = `${remainingSeconds}s`;
+
+      intervalId = setInterval(() => {
+        if (remainingSeconds > 0) {
+          remainingSeconds--;
+          updateTimerDisplay(remainingSeconds);
+          const progress = (remainingSeconds / parseInt(inputSeconds.value)) * 100;
+          timerCircle.style.borderColor = `hsl(${progress}, 100%, 50%)`; // Update border color based on progress
+        } else {
+          clearInterval(intervalId);
+          intervalId = null;
+          timerCircle.style.borderColor = originalBorderColor; // Reset border color to original
+        }
+      }, 1000);
     }
 
-    boxes.forEach(box => {
-      box.addEventListener("click", () => displayQuote(box));
-    });
+    startButton.addEventListener("click", startTimer);
   </script>
 </body>
 </html>
