@@ -30,10 +30,10 @@
 
     @keyframes fill {
       from {
-        background-color: yellow;
+        background-color: #FFFFE0;
       }
       to {
-        background-color: red;
+        background-color: #FFCCCB;
       }
     }
 
@@ -71,6 +71,7 @@
       <input type="number" id="input-seconds" min="1">
     </div>
     <button id="start-button">Start Timer</button>
+     </br>
     <div class="timer-circle">
       <div class="fill"></div>
       <span class="timer-text" id="timer-display">00:00</span>
@@ -104,7 +105,7 @@
           remainingSeconds--;
           updateTimerDisplay(remainingSeconds);
           const progress = (remainingSeconds / parseInt(inputSeconds.value)) * 100;
-          timerCircle.style.borderColor = `hsl(${progress}, 100%, 50%)`; // Update border color based on progress
+          timerCircle.style.borderColor = `hsl(${progress}, 50%, 90%)`; // Update border color based on progress
         } else {
           clearInterval(intervalId);
           intervalId = null;
